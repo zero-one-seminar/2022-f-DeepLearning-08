@@ -56,15 +56,16 @@ _paginate: false
 
 ## 2 層ニューラルネットワークのクラス
 
-MNIST データセットを用いて学習を行う
-
 ```python
 class TwoLayerNet:
 
     def __init__(self, input_size, hidden_size, output_size, weight_init_std=0.01):
         # 重みの初期化
         self.params = {}
-        self.params['W1'] = weight_init_std * np.random.rand
+        self.params['W1'] = weight_init_std * np.random.randn(input_size, hidden_size)
+        self.params['b1'] = np.zeros(hidden_size)
+        self.params['W2'] = weight_init_std * np.random.randn(hidden_size, output_size)
+        self.params['b2'] = np.zeros(output_size)
 ・
 ・
 ・
@@ -82,6 +83,21 @@ class TwoLayerNet:
 
 ---
 
+## ちょっと動かしてみる
+
+- 初期化
+
+```python
+net= TwoLayerNet(input_size=784,hidden_size=100,output_size=10)
+
+print(net.params['W1'].shape) #(784,100)
+print(net.params['b1'].shape) #(100,)
+print(net.params['W2'].shape) #(100,10)
+print(net.params['b2'].shape) #(10,)
+```
+
+---
+
 ## predict
 
 - 推論処理をする
@@ -91,8 +107,19 @@ class TwoLayerNet:
 - 損失関数を求める
 - 交差エントロピー誤差(t は正解ラベル、y は NN の出力)
   $$
-  E = {\sum_{k}{} t_k\log y_k}
+  E = -{\sum_{k}{} t_k\log y_k}
   $$
+
+---
+
+## ちょっと動かしてみる
+
+- 推論処理
+
+```python
+x=np.random.rand(100,784)
+y=net.predict(x)
+```
 
 ---
 
@@ -137,32 +164,6 @@ def numerical_gradient(self, x, t):
 - 勾配を求める（高速版）
 - 誤差逆伝搬法（次の章で学ぶ）を用いて計算
 - 今回は中身には触れないけど学習ではこっちを使います
-
----
-
-## ちょっと動かしてみる
-
-- 初期化
-
-```python
-net= TwoLayerNet(input_size=784,hidden_size=100,output_size=10)
-
-print(net.params['W1'].shape) #(784,100)
-print(net.params['b1'].shape) #(100,)
-print(net.params['W2'].shape) #(100,10)
-print(net.params['b2'].shape) #(10,)
-```
-
----
-
-## ちょっと動かしてみる
-
-- 推論処理
-
-```python
-x=np.random.rand(100,784)
-y=net.predict(x)
-```
 
 ---
 
